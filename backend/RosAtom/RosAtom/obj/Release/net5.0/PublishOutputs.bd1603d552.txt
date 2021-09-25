@@ -1,0 +1,10 @@
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\RosAtom.exe
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\appsettings.Development.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\appsettings.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\JsonDb\json\data.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\JsonDb\json\mentors.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\RosAtom.dll
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\RosAtom.deps.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\RosAtom.runtimeconfig.json
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\RosAtom.pdb
+C:\Users\Jeka\source\repos\RosAtom2\RosAtom\RosAtom\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
