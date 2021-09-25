@@ -27,6 +27,18 @@ namespace RosAtom.JsonDb.Models
 
         public string Rate { get; set; }
 
+        public decimal RateDecimal 
+        { 
+            get 
+            {
+                if (!string.IsNullOrEmpty(Rate))
+                {
+                    return decimal.Parse(Rate.Trim().Replace(",", string.Empty).Replace(".", ","), NumberStyles.Currency);
+                }
+                return 0;
+            } 
+        }
+
         public string City { get; set; }
 
         public int CountOfChildren { get; set; }

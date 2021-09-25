@@ -28,6 +28,9 @@ namespace RosAtom.Models
 
         public string Rate { get; set; }
 
+        public decimal? RateFrom { get; set; }
+        public decimal? RateTo { get; set; }
+
         public string City { get; set; }
 
         public int? CountOfChildren { get; set; }
