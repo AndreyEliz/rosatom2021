@@ -47,7 +47,6 @@ export const ModalDialog: React.FC<IAlertDialog> = ({title, handleClose, open, h
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText id="alert-dialog-description"> */}
             <div className={classes.wrapper}>
                 <FormControl>
                     <InputLabel>Ментор</InputLabel>
@@ -78,54 +77,51 @@ export const ModalDialog: React.FC<IAlertDialog> = ({title, handleClose, open, h
                 </FormControl>
 
                 <FormControl>
-            <InputLabel>Образование</InputLabel>
-            <Select
-                name={"Position"}
-                value={filter.Position}
-                label="Образование"
-                onChange={handleChange}
-            >
-                <MenuItem value={""}>Любое</MenuItem>
-                <MenuItem value={"1"}>Среднее</MenuItem>
-                <MenuItem value={"2"}>Среднее специальное</MenuItem>
-                <MenuItem value={"3"}>Высшее</MenuItem>
-            </Select>
-        </FormControl>
+                    <InputLabel>Образование</InputLabel>
+                    <Select
+                        name={"Position"}
+                        value={filter.Position?? ""}
+                        label="Образование"
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={""}>Любое</MenuItem>
+                        <MenuItem value={"1"}>Среднее</MenuItem>
+                        <MenuItem value={"2"}>Среднее специальное</MenuItem>
+                        <MenuItem value={"3"}>Высшее</MenuItem>
+                    </Select>
+                </FormControl>
 
-        <FormControl>
-            <InputLabel>Семейное положение</InputLabel>
-            <Select
-                value={filter.MaritalStatus}
-                label="Семейное положение"
-                onChange={handleChange}
-            >
-                <MenuItem value={""}>Любое</MenuItem>
-                <MenuItem value={"1"}>Разв.</MenuItem>
-                <MenuItem value={"2"}>Жен/ЗМ</MenuItem>
-                <MenuItem value={"3"}>Вдов.</MenuItem>
-                <MenuItem value={"4"}>Хол/НЗ</MenuItem>
-                <MenuItem value={"5"}>ГрБрак</MenuItem>
-            </Select>
-        </FormControl>
-        <FormControl>
-            <InputLabel>Зарплата от:</InputLabel>
-            <Select
-                value={filter.Rate}
-                label="Зарплата от:"
-                onChange={handleChange}
-            >
-                <MenuItem value={""}>Любая</MenuItem>
-                <MenuItem value={"5000.00"}>5,000.00</MenuItem>
-                <MenuItem value={"10000.00"}>10,000.00</MenuItem>
-                <MenuItem value={"20000.00"}>20,000.00</MenuItem>
-                <MenuItem value={"40000.00"}>40,000.00</MenuItem>
-                <MenuItem value={"80000.00"}>80,000.00</MenuItem>
-            </Select>
-        </FormControl>
+                <FormControl>
+                    <InputLabel>Семейное положение</InputLabel>
+                    <Select
+                        value={filter.MaritalStatus??""}
+                        label="Семейное положение"
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={""}>Любое</MenuItem>
+                        <MenuItem value={"1"}>Разв.</MenuItem>
+                        <MenuItem value={"2"}>Жен/ЗМ</MenuItem>
+                        <MenuItem value={"3"}>Вдов.</MenuItem>
+                        <MenuItem value={"4"}>Хол/НЗ</MenuItem>
+                        <MenuItem value={"5"}>ГрБрак</MenuItem>
+                    </Select>
+                </FormControl>
+                <FormControl>
+                    <InputLabel>Зарплата от:</InputLabel>
+                    <Select
+                        value={filter.Rate??""}
+                        label="Зарплата от:"
+                        onChange={handleChange}
+                    >
+                        <MenuItem value={""}>Любая</MenuItem>
+                        <MenuItem value={"5000.00"}>5,000.00</MenuItem>
+                        <MenuItem value={"10000.00"}>10,000.00</MenuItem>
+                        <MenuItem value={"20000.00"}>20,000.00</MenuItem>
+                        <MenuItem value={"40000.00"}>40,000.00</MenuItem>
+                        <MenuItem value={"80000.00"}>80,000.00</MenuItem>
+                    </Select>
+                </FormControl>
             </div>
-          
-
-          {/* </DialogContentText> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={onSubmit} color="primary" variant="contained">

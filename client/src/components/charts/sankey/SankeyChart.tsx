@@ -1,6 +1,6 @@
 import { ResponsiveSankey } from '@nivo/sankey'
 import { makeStyles } from '@material-ui/core/styles';
-import { Theme } from '@material-ui/core';
+import { Button, Theme } from '@material-ui/core';
 import { ModalDialog } from '../../Modal/Modal';
 import React from 'react';
 import AlertDialog from '../../AlertDialog/AlertDialog';
@@ -10,6 +10,13 @@ const useStyles = makeStyles((theme:Theme) => ({
         height: 800,
         width: 1600,
     },
+    button: {
+        textAlign: "center",
+        marginTop: "2em",
+        ["@media print"]: {
+            display: "none",
+        }
+    }
 }));
 
 export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
@@ -20,8 +27,11 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     const [filters, setFilters] = React.useState<any>({})
     const [filteredGroups, setFilteredGroups] = React.useState<any>([{
         id: "fired",
-        data: fired
+        data: fired,
+        filters: {}
     }])
+
+    const [visible, setVisible] = React.useState(false)
 
     const [data, setData]= React.useState<any>({
         nodes: [
@@ -86,8 +96,9 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         })
     }
 
-    function createNewNode(filters:any) {
-        const filtered = filteredGroups.find((group: any) => group.id === nodeId)?.data.filter((data: any) => {
+    function createNewNode(filters:any, selectedNodeId=nodeId) {
+        const originalGroup = filteredGroups.find((group: any) => group.id === selectedNodeId)
+        const filtered = originalGroup?.data.filter((data: any) => {
             return !Object.keys(filters).find((key) => {
                 if (filters[key] === "") return false;
                 return data[key].toString() !== filters[key]
@@ -99,15 +110,23 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
             return;
         }
 
-        const id = Object.keys(filters).map((key) => `${key} - ${filters[key]}`).join(" ");
-        setFilteredGroups([...filteredGroups, {id: id, data: filtered, }])
+        const newFilters = {
+            ...originalGroup.filters,
+            ...filters
+        }
+        console.log("newFilters", newFilters)
+        const id = Object.keys(newFilters).map((key) => `${key} - ${newFilters[key]}`).join("; ");
+        setFilteredGroups([...filteredGroups, {
+            id: id,
+            data: filtered,
+            filters: newFilters}])
         // filteredGroups.push({id: id, data: filtered, })
         const node = {
             id: id,
             label: id
         }
         const link = {
-            source: nodeId,
+            source: selectedNodeId,
             target: id,
             value: filtered.length,
         }
@@ -123,6 +142,12 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         console.log("data", data)
     }
     console.log("render", data)
+    
+    if (!visible) {
+        return <div className={classes.button}>
+                    <Button color="secondary" variant="contained" onClick={() => setVisible(true)}>Сгенерировать диаграмму</Button>
+                </div>;
+    }
 
     return (
         <div className={classes.wrapper}>
