@@ -128,7 +128,7 @@ export const BarChart: React.FC<any> = ({
     return (
     <div className={classes.barWrapper}>
         <ResponsiveBar
-            data={data}
+            data={testdata}
             keys={keys}
             indexBy={indexBy}
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
