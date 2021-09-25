@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { post, get } from 'sfapi';
 import { BarChart } from '../../components/charts/bar/Bar';
 import { LineChart } from '../../components/charts/line/Line';
+import { Pie } from '../../components/charts/Pie/Pie';
 import { Brief } from './brief/Brief';
 import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
@@ -24,6 +25,7 @@ const HomePage: React.FC = () => {
     const [fired, setFired] = React.useState<Person[]>([])
     const [date, setDate] = React.useState()
     const [education, setEducation] = React.useState()
+    const [oldYoung, setOldYoung] = React.useState<Person[]>([])
     const [hasMentor, setHasMentor] = React.useState<undefined | string>("")
 
     const classes = useStyles()
@@ -53,6 +55,11 @@ const HomePage: React.FC = () => {
             Position: education,
         }).then((data: any) => {
             setFired(data.Res)
+        })
+        get(`${API_URL}/RosAtom/GetByFilterArr`, {
+            IsWorking: "false"
+        }).then((data: any) => {
+            setOldYoung(data.Res)
         })
     }, [date, hasMentor, education]);
     
@@ -89,6 +96,23 @@ const HomePage: React.FC = () => {
             Month: index.toString()
         }
     });
+
+    const youngCount = oldYoung.filter(x=> x.IsYoung).length;
+    const oldYoungData = [
+        {
+          "id": "Old",
+          "label": "Опытные",
+          "value": oldYoung.length - youngCount,
+          "color": "hsl(10, 70%, 50%)"
+        },
+        {
+          "id": "Young",
+          "label": "Молодые",
+          "value": youngCount,
+          "color": "hsl(267, 70%, 50%)"
+        }
+      ];
+
     console.log(dataByMonth)
 
     return (
@@ -140,6 +164,7 @@ const HomePage: React.FC = () => {
                 <MenuItem value={"no"}>Нет</MenuItem>
             </Select>
         </FormControl>
+        <Pie data={oldYoungData}/>
         {/* <Brief data={current}/> */}
         <BarChart data={dataByMonth}/>
         <LineChart data={undefined} />
