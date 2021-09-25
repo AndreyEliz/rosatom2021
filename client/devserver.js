@@ -99,7 +99,6 @@ app.post('/api/authentication/token',(request, response) => {
 let flattenData;
 
 app.post('/api/data', (request, response) => {
-    console.log(request.body)
     let result;
     if (!flattenData) {
         const raw = excelToJson({
@@ -107,7 +106,6 @@ app.post('/api/data', (request, response) => {
         });
         flattenData = transformdata(raw);
     }
-    console.log(flattenData[0])
     result = flattenData.filter((data) => {
         return !Object.keys(request.body).find((key) => data[key].toString() !== request.body[key])
     })
@@ -127,6 +125,7 @@ app.post("/api/fired", (request, response) => {
         flattenData = transformdata(raw);
     }
     const result = flattenData.filter((person) => !!person.EndDate)
+    console.log(result)
     response.send(result)
 })
 
@@ -153,7 +152,7 @@ function transformdata(raw) {
         Rate: person["J"],
         City: person["K"],
         CountOfChildren: person["L"],
-        month: person.month
+        Month: person.month.toString()
     }))
 
     flatten.forEach((person) => {

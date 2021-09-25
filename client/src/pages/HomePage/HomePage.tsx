@@ -24,30 +24,39 @@ const HomePage: React.FC = () => {
     const [fired, setFired] = React.useState<Person[]>([])
     const [date, setDate] = React.useState()
     const [education, setEducation] = React.useState()
-    const [hasMentor, setHasMentor] = React.useState<undefined | boolean>()
+    const [hasMentor, setHasMentor] = React.useState<undefined | string>("")
 
     const classes = useStyles()
     
     useEffect(() => {
-        post(`${BASE_URL}/api/data`, {
-            month: date,
-            Position: education,
-            HasMentor: hasMentor
-        }).then((data:any) => {
-            setData(data)
-        })
-        post(`${BASE_URL}/api/fired`, {
-            month: date,
-            Position: education,
-            HasMentor: hasMentor
-        }).then((data:any) => {
-            setFired(fired)
-        })
+        // post(`${BASE_URL}/api/data`, {
+        //     month: date,
+        //     Position: education,
+        //     HasMentor: hasMentor
+        // }).then((data:any) => {
+        //     setData(data)
+        // })
+        // post(`${BASE_URL}/api/fired`, {
+        //     month: date,
+        //     Position: education,
+        //     HasMentor: hasMentor
+        // }).then((data:any) => {
+        //     setFired(data)
+        //     console.log(data)
+        // })
         // get(`${API_URL}/RosAtom/GetByMonth/${date}`).then((data) => setData(data))
-        // get(`${API_URL}/RosAtom/GetAllArr`).then((data: Person[]) => setData(data))
-    }, [date]);
+        // get(`${API_URL}/RosAtom/GetAll`, {EndDate}).then((data: Person[]) => setData(data))
+        get(`${API_URL}/RosAtom/GetByFilter`, {
+            IsWorking: "false",
+            HasMentor: hasMentor ? `${hasMentor === 'yes'}`: undefined,
+            Month: date,
+            Position: education,
+        }).then((data: any) => {
+            setFired(data.Res)
+        })
+    }, [date, hasMentor, education]);
     
-    const current = fired.length / data.length;
+    // const current = fired.length / data.length;
 
     const handleMonthChange = (e:any) => {
         setDate(e.target.value);
@@ -56,8 +65,31 @@ const HomePage: React.FC = () => {
         setEducation(e.target.value);
     }
     const handleMentorChange = (e:any) => {
-        setHasMentor(!!e.target.value);
+        setHasMentor(e.target.value);
     }
+
+    const dataByMonth = Object.values(fired).map((month:any, index) => {
+        const positions:any = {
+            1: 0,
+            2: 0,
+            3: 0,
+        }
+        month.forEach((person:Person) => {
+            // if (positions[person.Position]) {
+                positions[person.Position]++
+            // }
+        })
+        // if (!positions.Position1) delete positions.Position1;
+        // if (!positions.Position2) delete positions.Position2;
+        // if (!positions.Position3) delete positions.Position3;
+        return {
+            Position1: positions[1],
+            Position2: positions[2],
+            Position3: positions[3],
+            Month: index.toString()
+        }
+    });
+    console.log(dataByMonth)
 
     return (
     <div className={classes.wrapper}>
@@ -99,17 +131,17 @@ const HomePage: React.FC = () => {
         <FormControl>
             <InputLabel>Ментор</InputLabel>
             <Select
-                value={date}
+                value={hasMentor}
                 label="Ментор"
                 onChange={handleMentorChange}
             >
-                <MenuItem value={undefined}>Не важно</MenuItem>
-                <MenuItem value={1}>Есть</MenuItem>
-                <MenuItem value={0}>Нет</MenuItem>
+                <MenuItem value={""}>Не важно</MenuItem>
+                <MenuItem value={"yes"}>Есть</MenuItem>
+                <MenuItem value={"no"}>Нет</MenuItem>
             </Select>
         </FormControl>
-        <Brief data={current}/>
-        <BarChart data={data}/>
+        {/* <Brief data={current}/> */}
+        <BarChart data={dataByMonth}/>
         <LineChart data={undefined} />
         <SankeyChart data={undefined} />
     </div>   
