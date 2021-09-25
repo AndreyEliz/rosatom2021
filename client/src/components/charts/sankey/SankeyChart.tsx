@@ -1,9 +1,19 @@
 import { ResponsiveSankey } from '@nivo/sankey'
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Theme } from '@material-ui/core';
+import { Theme } from '@material-ui/core';
 import { ModalDialog } from '../../Modal/Modal';
 import React from 'react';
 import AlertDialog from '../../AlertDialog/AlertDialog';
+import {GenerateBtn} from './GenerateBtn';
+
+const filterKeyMap: Record<string, string> = {
+    "Position": "Образование",
+    "Sex": "Пол",
+    "MaritalStatus": "Семья",
+    "Rate": "Зарплата от",
+    "HasMentor": "Ментор",
+    "IsYoung": "Молодой специалист",
+}
 
 const useStyles = makeStyles((theme:Theme) => ({
     wrapper: {
@@ -18,6 +28,27 @@ const useStyles = makeStyles((theme:Theme) => ({
         }
     }
 }));
+
+const NodeTooltip = ({node}: any) => {
+    const filters = node.label.split("; ")
+    return <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <div style={{backgroundColor: node.color, width: 10, height: 10, margin: 5}}></div>
+        <div style={{margin: "0 15px"}}>{filters.map((label:string) => <div>{label}</div>)}</div>
+        <div><b>{node.value} человек</b></div>
+    </div>
+}
+
+const LinkTooltip = ({link}: any) => {
+    const filtersSource = link.source.label.split("; ")
+    const filtersTarget = link.target.label.split("; ")
+    return <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+        <div style={{backgroundColor: link.color, width: 10, height: 10, margin: 5}}></div>
+        <div style={{margin: "0 15px"}}>{filtersSource.map((label:string) => <div>{label}</div>)}</div>
+        <div>{"-->"}</div>
+        <div style={{margin: "0 15px"}}>{filtersTarget.map((label:string) => <div>{label}</div>)}</div>
+        <div><b>{link.target.value} человек</b></div>
+    </div>
+}
 
 export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     const classes = useStyles();
@@ -115,12 +146,11 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
             ...filters
         }
         console.log("newFilters", newFilters)
-        const id = Object.keys(newFilters).map((key) => `${key} - ${newFilters[key]}`).join("; ");
+        const id = Object.keys(newFilters).sort().map((key) => `${filterKeyMap[key]} - ${newFilters[key]}`).join("; ");
         setFilteredGroups([...filteredGroups, {
             id: id,
             data: filtered,
             filters: newFilters}])
-        // filteredGroups.push({id: id, data: filtered, })
         const node = {
             id: id,
             label: id
@@ -141,11 +171,25 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         console.log("sameNodeExists", sameNodeExists, id, data.nodes)
         console.log("data", data)
     }
-    console.log("render", data)
+
+    const onMentorClick = () => {
+        createNewNode({HasMentor: "true"}, "fired")
+        setVisible(true)
+    }
+
+    const onYongClick = () => {
+        createNewNode({IsYoung: "true"}, "fired")
+        setVisible(true)
+    }
+
+    const onMentorHEClick = () => {
+        createNewNode({HasMentor: "true", Position: "3"}, "fired")
+        setVisible(true)
+    }
     
     if (!visible) {
         return <div className={classes.button}>
-                    <Button color="secondary" variant="contained" onClick={() => setVisible(true)}>Сгенерировать диаграмму</Button>
+                    <GenerateBtn onMentor={onMentorClick} onYong={onYongClick} onMentorHE={onMentorHEClick}/>
                 </div>;
     }
 
@@ -173,6 +217,8 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         legends={[
         ]}
         onClick={onSankeyClick}
+        nodeTooltip={node => <NodeTooltip node={node} />}
+        linkTooltip={link => <LinkTooltip link={link} />}
     />
     <ModalDialog 
         filter={filters[nodeId]}

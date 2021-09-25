@@ -94,7 +94,8 @@ export const ModalDialog: React.FC<IAlertDialog> = ({title, handleClose, open, h
                 <FormControl>
                     <InputLabel>Семейное положение</InputLabel>
                     <Select
-                        value={filter.MaritalStatus??""}
+                        value={filter.MaritalStatus ?? ""}
+                        name={"MaritalStatus"}
                         label="Семейное положение"
                         onChange={handleChange}
                     >
@@ -110,6 +111,7 @@ export const ModalDialog: React.FC<IAlertDialog> = ({title, handleClose, open, h
                     <InputLabel>Зарплата от:</InputLabel>
                     <Select
                         value={filter.Rate??""}
+                        name={"Rate"}
                         label="Зарплата от:"
                         onChange={handleChange}
                     >
