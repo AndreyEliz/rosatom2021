@@ -2,9 +2,7 @@ import { API_URL, BASE_URL } from 'config';
 import React, { useEffect } from 'react';
 import { post, get } from 'sfapi';
 import { BarChart } from '../../components/charts/bar/Bar';
-import { LineChart } from '../../components/charts/line/Line';
 import { Pie } from '../../components/charts/Pie/Pie';
-import { Brief } from './brief/Brief';
 import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
 import FormControl from '@material-ui/core/FormControl';
@@ -43,23 +41,6 @@ const HomePage: React.FC = () => {
     const classes = useStyles()
     
     useEffect(() => {
-        // post(`${BASE_URL}/api/data`, {
-        //     month: date,
-        //     Position: education,
-        //     HasMentor: hasMentor
-        // }).then((data:any) => {
-        //     setData(data)
-        // })
-        // post(`${BASE_URL}/api/fired`, {
-        //     month: date,
-        //     Position: education,
-        //     HasMentor: hasMentor
-        // }).then((data:any) => {
-        //     setFired(data)
-        //     console.log(data)
-        // })
-        // get(`${API_URL}/RosAtom/GetByMonth/${date}`).then((data) => setData(data))
-        // get(`${API_URL}/RosAtom/GetAll`, {EndDate}).then((data: Person[]) => setData(data))
         get(`${API_URL}/RosAtom/GetByFilter`, {
             IsWorking: "false",
             HasMentor: hasMentor ? `${hasMentor === 'yes'}`: undefined,

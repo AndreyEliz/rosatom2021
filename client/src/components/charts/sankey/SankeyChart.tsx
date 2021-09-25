@@ -12,28 +12,6 @@ const useStyles = makeStyles((theme:Theme) => ({
     },
 }));
 
-const testdata = {
-    "nodes": [
-      {
-        "id": "total",
-        "color": "hsl(357, 70%, 50%)",
-        label: "Все сотрудники"
-      },
-      {
-        "id": "fired",
-        "color": "hsl(91, 70%, 50%)",
-        label: "Ушедшие из компании"
-      }
-    ],
-    "links": [
-      {
-        "source": "total",
-        "target": "fired",
-        "value": 28
-      },
-    ]
-  }
-
 export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     const classes = useStyles();
     const [isModalOpen, setModalOpen] = React.useState(false)

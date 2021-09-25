@@ -13,6 +13,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme:any) => ({
 	root: {
 	},
+	["@page"]: {
+		size: "landscape",
+	},
     drawer: {
 		width: drawerWidth,
 		flexShrink: 0,
