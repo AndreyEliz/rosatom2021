@@ -237,7 +237,7 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className={classes.charts}>
-            {oldYoungData.length && <Pie data={oldYoungData}/>}
+            <div style={{width: "50%"}}>{oldYoungData.length && <Pie data={oldYoungData}/>}</div>
             {/* <Brief data={current}/> */}
             {dataByMonth.length && <BarChart data={dataByMonth}/>}
         </div>
