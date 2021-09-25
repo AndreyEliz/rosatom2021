@@ -27,6 +27,8 @@ const HomePage: React.FC = () => {
     const [education, setEducation] = React.useState()
     const [oldYoung, setOldYoung] = React.useState<Person[]>([])
     const [hasMentor, setHasMentor] = React.useState<undefined | string>("")
+    const [maritalStatuses, setMaritalStatuses] = React.useState<undefined | string>("")
+    const [sex, setSex] = React.useState<undefined | string>("")
 
     const classes = useStyles()
     
@@ -53,6 +55,8 @@ const HomePage: React.FC = () => {
             HasMentor: hasMentor ? `${hasMentor === 'yes'}`: undefined,
             Month: date,
             Position: education,
+            MaritalStatus: maritalStatuses ? maritalStatuses : undefined,
+            Sex: sex ? sex : undefined
         }).then((data: any) => {
             setFired(data.Res)
         })
@@ -61,7 +65,7 @@ const HomePage: React.FC = () => {
         }).then((data: any) => {
             setOldYoung(data.Res)
         })
-    }, [date, hasMentor, education]);
+    }, [date, hasMentor, education, maritalStatuses, sex]);
     
     // const current = fired.length / data.length;
 
@@ -73,6 +77,14 @@ const HomePage: React.FC = () => {
     }
     const handleMentorChange = (e:any) => {
         setHasMentor(e.target.value);
+    }
+
+    const handleMaritalStatusesChange = (e: any) => {
+        setMaritalStatuses(e.target.value);
+    }
+
+    const handlerSexChange = (e: any) => {
+        setSex(e.target.value);
     }
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
@@ -162,6 +174,34 @@ const HomePage: React.FC = () => {
                 <MenuItem value={""}>Не важно</MenuItem>
                 <MenuItem value={"yes"}>Есть</MenuItem>
                 <MenuItem value={"no"}>Нет</MenuItem>
+            </Select>
+        </FormControl>
+
+        <FormControl>
+            <InputLabel>Семейное положение</InputLabel>
+            <Select
+                value={maritalStatuses}
+                label="Семейное положение"
+                onChange={handleMaritalStatusesChange}
+            >
+                <MenuItem value={undefined}>Любое</MenuItem>
+                <MenuItem value={"1"}>Разв.</MenuItem>
+                <MenuItem value={"2"}>Жен/ЗМ</MenuItem>
+                <MenuItem value={"3"}>Вдов.</MenuItem>
+                <MenuItem value={"4"}>Хол/НЗ</MenuItem>
+                <MenuItem value={"5"}>ГрБрак</MenuItem>
+            </Select>
+        </FormControl>
+        <FormControl>
+            <InputLabel>Пол</InputLabel>
+            <Select
+                value={sex}
+                label="Пол"
+                onChange={handlerSexChange}
+            >
+                <MenuItem value={undefined}>Любой</MenuItem>
+                <MenuItem value={"женский"}>женский</MenuItem>
+                <MenuItem value={"мужской"}>мужской</MenuItem>
             </Select>
         </FormControl>
         <Pie data={oldYoungData}/>
