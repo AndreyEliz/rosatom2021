@@ -136,7 +136,7 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
             })
         })
 
-        if (!filtered) {
+        if (!filtered.length) {
             setAlertOpen(true);
             return;
         }
