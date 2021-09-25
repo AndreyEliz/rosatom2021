@@ -1,2 +1,9 @@
 node_modules
 .idea
+backend/RosAtom/.vs/RosAtom/v16/.suo
+backend/RosAtom/.vs/RosAtom/DesignTimeBuild/.dtbcache.v2
+backend/RosAtom/.vs/RosAtom/v16/.suo
+*.v2
+backend/RosAtom/RosAtom/bin/Debug/net5.0/ref/RosAtom.dll
+backend/RosAtom/RosAtom/bin/Debug/net5.0/RosAtom.pdb
+backend/RosAtom/RosAtom/bin/Debug/net5.0/RosAtom.dll

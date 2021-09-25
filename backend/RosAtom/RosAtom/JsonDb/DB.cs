@@ -66,72 +66,27 @@ namespace RosAtom.JsonDb
 
         public List<Employee> GetByFilterArr(EmployeeParameters employeeParameters)
         {
-            return GetAllArr()
-                .WhereIf(employeeParameters.HasMentor.HasValue, x => x.HasMentor == employeeParameters.HasMentor)
-                .WhereIf(employeeParameters.MaritalStatus.HasValue, x => x.MaritalStatus == employeeParameters.MaritalStatus)
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.NameOfAbsence), x => x.NameOfAbsence.ToLower() == employeeParameters.NameOfAbsence.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.Position), x => x.Position.ToLower() == employeeParameters.Position.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.Rate), x => x.Rate.ToLower() == employeeParameters.Rate.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.Sex), x => x.Sex.ToLower() == employeeParameters.Sex.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.StartDate), x => x.StartDate.ToLower() == employeeParameters.StartDate.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.EndDate), x => x.EndDate.ToLower() == employeeParameters.EndDate.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.CalendarDaysOfAbsence), x => x.CalendarDaysOfAbsence.ToLower() == employeeParameters.CalendarDaysOfAbsence.ToLower())
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.City), x => x.City.ToLower() == employeeParameters.City.ToLower())
-                .WhereIf(employeeParameters.CountOfChildren.HasValue, x => x.CountOfChildren == employeeParameters.CountOfChildren)
-                .WhereIf(!string.IsNullOrEmpty(employeeParameters.DateOfBirth), x => x.DateOfBirth.ToLower() == employeeParameters.DateOfBirth.ToLower())
-                .WhereIf(employeeParameters.IsYoung.HasValue, x => x.IsYoung == employeeParameters.IsYoung)
-                .WhereIf(employeeParameters.IsWorking.HasValue, x => x.IsWorking == employeeParameters.IsWorking)
-                .ToList();
+            return SetFilters(GetAllArr(), employeeParameters);
         }
+
         public Dictionary<int, List<Employee>> GetByFilter(EmployeeParameters employeeParameters)
         {
             var result = new Dictionary<int, List<Employee>>();
             if (employeeParameters.Month.HasValue && _employees.ContainsKey(employeeParameters.Month.Value))
             {
-                var preResult = GetAll().First(x => x.Key == employeeParameters.Month)
-                    .Value
-                    .WhereIf(employeeParameters.HasMentor.HasValue, x => x.HasMentor == employeeParameters.HasMentor)
-                    .WhereIf(employeeParameters.MaritalStatus.HasValue, x => x.MaritalStatus == employeeParameters.MaritalStatus)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.NameOfAbsence), x => x.NameOfAbsence.ToLower() == employeeParameters.NameOfAbsence.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Position), x => x.Position.ToLower() == employeeParameters.Position.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Rate), x => x.Rate.ToLower() == employeeParameters.Rate.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Sex), x => x.Sex.ToLower() == employeeParameters.Sex.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.StartDate), x => x.StartDate.ToLower() == employeeParameters.StartDate.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.EndDate), x => x.EndDate.ToLower() == employeeParameters.EndDate.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.CalendarDaysOfAbsence), x => x.CalendarDaysOfAbsence.ToLower() == employeeParameters.CalendarDaysOfAbsence.ToLower())
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.City), x => x.City.ToLower() == employeeParameters.City.ToLower())
-                    .WhereIf(employeeParameters.CountOfChildren.HasValue, x => x.CountOfChildren == employeeParameters.CountOfChildren)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.DateOfBirth), x => x.DateOfBirth.ToLower() == employeeParameters.DateOfBirth.ToLower())
-                    .WhereIf(employeeParameters.IsYoung.HasValue, x => x.IsYoung == employeeParameters.IsYoung)
-                    .WhereIf(employeeParameters.IsWorking.HasValue, x => x.IsWorking == employeeParameters.IsWorking)
-                    .ToList();
+                var preResult = SetFilters(GetAll().First(x => x.Key == employeeParameters.Month).Value, employeeParameters);
                 if (preResult.Count > 0)
                 {
                     result.Add(employeeParameters.Month.Value, preResult);
                 }
-                
             }
             else
             {
                 foreach(var key in _employees)
                 {
-                    var preResult = key.Value.WhereIf(employeeParameters.HasMentor.HasValue, x => x.HasMentor == employeeParameters.HasMentor)
-                    .WhereIf(employeeParameters.MaritalStatus.HasValue, x => x.MaritalStatus == employeeParameters.MaritalStatus)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.NameOfAbsence), x => x.NameOfAbsence == employeeParameters.NameOfAbsence)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Position), x => x.Position == employeeParameters.Position)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Rate), x => x.Rate == employeeParameters.Rate)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.Sex), x => x.Sex == employeeParameters.Sex)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.StartDate), x => x.StartDate == employeeParameters.StartDate)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.EndDate), x => x.EndDate == employeeParameters.EndDate)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.CalendarDaysOfAbsence), x => x.CalendarDaysOfAbsence == employeeParameters.CalendarDaysOfAbsence)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.City), x => x.City == employeeParameters.City)
-                    .WhereIf(employeeParameters.CountOfChildren.HasValue, x => x.CountOfChildren == employeeParameters.CountOfChildren)
-                    .WhereIf(employeeParameters.IsWorking.HasValue, x => x.IsWorking == employeeParameters.IsWorking)
-                    .WhereIf(!string.IsNullOrEmpty(employeeParameters.DateOfBirth), x => x.DateOfBirth == employeeParameters.DateOfBirth)
-                    .WhereIf(employeeParameters.IsYoung.HasValue, x => x.IsYoung == employeeParameters.IsYoung)
-                    .ToList();
+                    var preResult = SetFilters(key.Value, employeeParameters);
 
-                    if(preResult.Count > 0)
+                    if (preResult.Count > 0)
                     {
                         result.Add(key.Key, preResult);
                     }
@@ -139,6 +94,27 @@ namespace RosAtom.JsonDb
                 }
             }
             return result;
+        }
+
+        public List<Employee> SetFilters(List<Employee> source, EmployeeParameters employeeParameters)
+        {
+            return source
+                .WhereIf(employeeParameters.HasMentor.HasValue, x => x.HasMentor == employeeParameters.HasMentor)
+                .WhereIf(employeeParameters.MaritalStatus.HasValue, x => x.MaritalStatus == employeeParameters.MaritalStatus)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.NameOfAbsence), x => x.NameOfAbsence == employeeParameters.NameOfAbsence)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.Position), x => x.Position == employeeParameters.Position)
+                .WhereIf(employeeParameters.RateFrom.HasValue, x => x.RateDecimal >= employeeParameters.RateFrom)
+                .WhereIf(employeeParameters.RateTo.HasValue, x => x.RateDecimal <= employeeParameters.RateTo)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.Sex), x => x.Sex == employeeParameters.Sex)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.StartDate), x => x.StartDate == employeeParameters.StartDate)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.EndDate), x => x.EndDate == employeeParameters.EndDate)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.CalendarDaysOfAbsence), x => x.CalendarDaysOfAbsence == employeeParameters.CalendarDaysOfAbsence)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.City), x => x.City == employeeParameters.City)
+                .WhereIf(employeeParameters.CountOfChildren.HasValue, x => x.CountOfChildren == employeeParameters.CountOfChildren)
+                .WhereIf(employeeParameters.IsWorking.HasValue, x => x.IsWorking == employeeParameters.IsWorking)
+                .WhereIf(!string.IsNullOrEmpty(employeeParameters.DateOfBirth), x => x.DateOfBirth == employeeParameters.DateOfBirth)
+                .WhereIf(employeeParameters.IsYoung.HasValue, x => x.IsYoung == employeeParameters.IsYoung)
+                .ToList();
         }
 
         public List<string>  GetPositions()

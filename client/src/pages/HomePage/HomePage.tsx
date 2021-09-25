@@ -38,6 +38,7 @@ const HomePage: React.FC = () => {
     const [hasMentor, setHasMentor] = React.useState<undefined | string>("")
     const [maritalStatuses, setMaritalStatuses] = React.useState<undefined | string>("")
     const [sex, setSex] = React.useState<undefined | string>("")
+    const [rateFrom, setRateFrom] = React.useState<undefined | string >("")
 
     const classes = useStyles()
     
@@ -65,7 +66,8 @@ const HomePage: React.FC = () => {
             Month: date,
             Position: education,
             MaritalStatus: maritalStatuses ? maritalStatuses : undefined,
-            Sex: sex ? sex : undefined
+            Sex: sex ? sex : undefined,
+            RateFrom: rateFrom ? rateFrom : undefined
         }).then((data: any) => {
             setFired(data.Res)
             console.log(data)
@@ -76,7 +78,7 @@ const HomePage: React.FC = () => {
             setOldYoung(data.Res)
             console.log(data)
         })
-    }, [date, hasMentor, education, maritalStatuses, sex]);
+    }, [date, hasMentor, education, maritalStatuses, sex, rateFrom]);
     
 
     const handleMonthChange = (e:any) => {
@@ -95,6 +97,10 @@ const HomePage: React.FC = () => {
 
     const handlerSexChange = (e: any) => {
         setSex(e.target.value);
+    }
+
+    const handlerRateChange = (e: any) => {
+        setRateFrom(e.target.value);
     }
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
@@ -212,6 +218,22 @@ const HomePage: React.FC = () => {
                 <MenuItem value={"мужской"}>мужской</MenuItem>
             </Select>
         </FormControl>
+        <FormControl>
+            <InputLabel>Зарплата от:</InputLabel>
+            <Select
+                value={rateFrom}
+                label="Зарплата от:"
+                onChange={handlerRateChange}
+            >
+                <MenuItem value={undefined}>Любая</MenuItem>
+                <MenuItem value={"5000.00"}>5,000.00</MenuItem>
+                <MenuItem value={"10000.00"}>10,000.00</MenuItem>
+                <MenuItem value={"20000.00"}>20,000.00</MenuItem>
+                <MenuItem value={"40000.00"}>40,000.00</MenuItem>
+                <MenuItem value={"80000.00"}>80,000.00</MenuItem>
+            </Select>
+        </FormControl>
+
         </div>
 
         <div className={classes.charts}>
