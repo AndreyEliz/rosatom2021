@@ -306,7 +306,7 @@ const HomePage: React.FC = () => {
                 {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
                 {dataByMonth.length  && <Button onClick={handlerYoungWithOutMentorClick}>Молодые без наставника</Button>}
                 {dataByMonth.length && <Button onClick={handlerCountOfChildrenClick}>Изменилось количество детей</Button>}
-                {dataByMonth.length && <Button onClick={handlerRateChangedClick}>Изменилась зарплата</Button>}
+                {dataByMonth.length && <Button onClick={handlerRateChangedClick}>Менялась зарплата</Button>}
             </ButtonGroup>
         </div>
         
