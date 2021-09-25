@@ -6,7 +6,8 @@ import { InputLabel } from '@material-ui/core';
 const useStyles = makeStyles((theme:Theme) => ({
     barWrapper: {
         height: 400,
-        width: 700,
+        width: 500,
+        textAlign: "center",
     },
 }));
 
