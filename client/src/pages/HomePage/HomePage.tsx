@@ -149,7 +149,18 @@ const HomePage: React.FC = () => {
         setrateChanged("true");
     }
 
+    const handlerReset =() => {
 
+        setHasMentor(undefined);
+        setEducation(undefined);
+        setMaritalStatuses(undefined); 
+        setSex(undefined); 
+        setRateFrom(undefined); 
+        setYoung(undefined);
+        setRateFrom(undefined);
+        setCountOfChildren(undefined);
+        setrateChanged(undefined);
+    }
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
         const positions:any = {
@@ -303,6 +314,7 @@ const HomePage: React.FC = () => {
         </div>
         <div className={classes.buttons}>
             <ButtonGroup orientation="horizontal">
+                {dataByMonth.length && <Button onClick={handlerReset}>Сбросить фильтры</Button>}
                 {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
                 {dataByMonth.length  && <Button onClick={handlerYoungWithOutMentorClick}>Молодые без наставника</Button>}
                 {dataByMonth.length && <Button onClick={handlerCountOfChildrenClick}>Изменилось количество детей</Button>}
