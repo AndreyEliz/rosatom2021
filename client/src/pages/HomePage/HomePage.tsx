@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
     const classes = useStyles()
     
     useEffect(() => {
-        get(`${API_URL}/RosAtom/GetByFilter`, {
+        const filterParams = {
             IsWorking: "false",
             HasMentor: hasMentor ? `${hasMentor === 'yes'}`: undefined,
             Month: date,
@@ -58,13 +58,12 @@ const HomePage: React.FC = () => {
             RateFrom: rateFrom ? rateFrom : undefined,
             IsCountOfChildrenChange: countOfChildren ? countOfChildren : undefined,
             IsRateChange: rateChanged ? rateChanged : undefined
-        }).then((data: any) => {
+        }
+        get(`${API_URL}/RosAtom/GetByFilter`, filterParams).then((data: any) => {
             setFired(data.Res)
             console.log(data)
         })
-        get(`${API_URL}/RosAtom/GetByFilterArr`, {
-            IsWorking: "false"
-        }).then((data: any) => {
+        get(`${API_URL}/RosAtom/GetByFilterArr`, filterParams).then((data: any) => {
             setOldYoung(data.Res)
             console.log(data)
         })
