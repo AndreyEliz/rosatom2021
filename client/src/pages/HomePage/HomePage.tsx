@@ -14,8 +14,18 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme:Theme) => ({
     wrapper: {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
     },
+    form: {
+        display: "flex",
+        flexDirection: "column",
+        width: "20%"
+    },
+    charts: {
+        display: "flex",
+        flexDirection: "row",
+        width: "70%"
+    }
 }));
 
 
@@ -58,11 +68,13 @@ const HomePage: React.FC = () => {
             Sex: sex ? sex : undefined
         }).then((data: any) => {
             setFired(data.Res)
+            console.log(data)
         })
         get(`${API_URL}/RosAtom/GetByFilterArr`, {
             IsWorking: "false"
         }).then((data: any) => {
             setOldYoung(data.Res)
+            console.log(data)
         })
     }, [date, hasMentor, education, maritalStatuses, sex]);
     
@@ -122,7 +134,9 @@ const HomePage: React.FC = () => {
       ];
 
     return (
+        <>
     <div className={classes.wrapper}>
+        <div className={classes.form}>
         <FormControl>
             <InputLabel>Месяц</InputLabel>
             <Select
@@ -198,12 +212,18 @@ const HomePage: React.FC = () => {
                 <MenuItem value={"мужской"}>мужской</MenuItem>
             </Select>
         </FormControl>
-        <Pie data={oldYoungData}/>
-        {/* <Brief data={current}/> */}
-        <BarChart data={dataByMonth}/>
+        </div>
+
+        <div className={classes.charts}>
+            {oldYoungData.length && <Pie data={oldYoungData}/>}
+            {/* <Brief data={current}/> */}
+            {dataByMonth.length && <BarChart data={dataByMonth}/>}
+        </div>
+        
         {/* <LineChart data={undefined} /> */}
-        <SankeyChart total={data.length} fired={firedFlatten} />
-    </div>   
+    </div>
+    {firedFlatten.length && <SankeyChart total={data.length} fired={firedFlatten} />}
+    </>
     );
 }
 

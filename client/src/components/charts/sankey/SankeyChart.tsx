@@ -40,11 +40,10 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [nodeId, setNodeId] = React.useState("fired")
     const [filters, setFilters] = React.useState<any>({})
-
-    const filteredGroups = [{
+    const [filteredGroups, setFilteredGroups] = React.useState<any>([{
         id: "fired",
         data: fired
-    }]
+    }])
 
     const [data, setData]= React.useState<any>({
         nodes: [
@@ -90,14 +89,13 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         setModalOpen(false)
     }
 
-    const handleSubmit = (data: any) => {
-        console.log(data)
+    const handleSubmit = (newFilters: any) => {
         setFilters({
             ...filters,
-            [nodeId]: data
+            [nodeId]: newFilters
         })
         setModalOpen(false);
-        createNewNode(data)
+        createNewNode(newFilters)
     }
 
     const handleFormChange = (e: any) => {
@@ -111,13 +109,12 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     }
 
     function createNewNode(filters:any) {
-        const filtered = filteredGroups.find((group) => group.id === nodeId)?.data.filter((data: any) => {
+        const filtered = filteredGroups.find((group: any) => group.id === nodeId)?.data.filter((data: any) => {
             return !Object.keys(filters).find((key) => {
                 if (filters[key] === "") return false;
                 return data[key].toString() !== filters[key]
             })
         })
-        console.log("data", data)
 
         if (!filtered) {
             setAlertOpen(true);
@@ -125,7 +122,8 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
         }
 
         const id = Object.keys(filters).map((key) => `${key} - ${filters[key]}`).join(" ");
-        filteredGroups.push({id: id, data: filtered, });
+        setFilteredGroups([...filteredGroups, {id: id, data: filtered, }])
+        // filteredGroups.push({id: id, data: filtered, })
         const node = {
             id: id,
             label: id
@@ -135,13 +133,18 @@ export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
             target: id,
             value: filtered.length,
         }
-        setData({
-            nodes: [...data.nodes, node],
-            links: [...data.links, link],
-        });
-        console.log(node, link, data)
-        console.log("fired",fired)
+        const sameNodeExists = data.nodes.find((existing: any) => existing.id === id)
+        const sameLinkExists = data.links.find((existing: any) => existing.target.id === id && existing.source.id === id)
+        if(!sameLinkExists || !sameNodeExists) {
+            setData({
+                nodes: sameNodeExists ? [...data.nodes] : [...data.nodes, node],
+                links: sameLinkExists ? [...data.links] :[...data.links, link],
+            });
+        }
+        console.log("sameNodeExists", sameNodeExists, id, data.nodes)
+        console.log("data", data)
     }
+    console.log("render", data)
 
     return (
         <div className={classes.wrapper}>
