@@ -6,7 +6,7 @@ import { Pie } from '../../components/charts/Pie/Pie';
 import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
 import FormControl from '@material-ui/core/FormControl';
-import { InputLabel, Select, MenuItem, Theme } from '@material-ui/core';
+import { InputLabel, Select, MenuItem, Theme, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme:Theme) => ({
@@ -37,6 +37,8 @@ const HomePage: React.FC = () => {
     const [maritalStatuses, setMaritalStatuses] = React.useState<undefined | string>("")
     const [sex, setSex] = React.useState<undefined | string>("")
     const [rateFrom, setRateFrom] = React.useState<undefined | string >("")
+    const [isYoung, setYoung] = React.useState<undefined | string >("")
+    const [countOfChildren, setCountOfChildren] = React.useState<undefined | string >("")
 
     const classes = useStyles()
     
@@ -48,7 +50,8 @@ const HomePage: React.FC = () => {
             Position: education,
             MaritalStatus: maritalStatuses ? maritalStatuses : undefined,
             Sex: sex ? sex : undefined,
-            RateFrom: rateFrom ? rateFrom : undefined
+            RateFrom: rateFrom ? rateFrom : undefined,
+            countOfChildrenChange: countOfChildren ? countOfChildren : undefined
         }).then((data: any) => {
             setFired(data.Res)
             console.log(data)
@@ -59,7 +62,7 @@ const HomePage: React.FC = () => {
             setOldYoung(data.Res)
             console.log(data)
         })
-    }, [date, hasMentor, education, maritalStatuses, sex, rateFrom]);
+    }, [date, hasMentor, education, maritalStatuses, sex, rateFrom, isYoung, countOfChildren]);
     
 
     const handleMonthChange = (e:any) => {
@@ -76,12 +79,26 @@ const HomePage: React.FC = () => {
         setMaritalStatuses(e.target.value);
     }
 
+    const handleYoungChange = (e: any) => {
+        setYoung(e.target.value);
+    }
+
     const handlerSexChange = (e: any) => {
         setSex(e.target.value);
     }
 
     const handlerRateChange = (e: any) => {
         setRateFrom(e.target.value);
+    }
+
+    const handlerYoungMentorClick = () => {
+        setHasMentor("yes");
+        setYoung("true");
+    }
+
+    const handlerYoungWithOutMentorClick = () => {
+        setHasMentor("no");
+        setYoung("true");
     }
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
@@ -214,6 +231,18 @@ const HomePage: React.FC = () => {
                 <MenuItem value={"80000.00"}>80,000.00</MenuItem>
             </Select>
         </FormControl>
+        <FormControl>
+            <InputLabel>Опыт:</InputLabel>
+            <Select
+                value={isYoung}
+                label="Опыт:"
+                onChange={handleYoungChange}
+            >
+                <MenuItem value={undefined}>Любой</MenuItem>
+                <MenuItem value={"true"}>Молодой</MenuItem>
+                <MenuItem value={"false"}>Опытный</MenuItem>
+            </Select>
+        </FormControl>
 
         </div>
 
@@ -221,6 +250,12 @@ const HomePage: React.FC = () => {
             <div style={{width: "50%"}}>{oldYoungData.length && <Pie data={oldYoungData}/>}</div>
             {/* <Brief data={current}/> */}
             {dataByMonth.length && <BarChart data={dataByMonth}/>}
+            <div>
+            {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
+                {dataByMonth.length  && <Button onClick={handlerYoungWithOutMentorClick}>Молодые без наставника</Button>}
+                {dataByMonth.length && <Button>Изменилось количество детей</Button>}
+                {dataByMonth.length && <Button>Изменилась зарплата</Button>}
+            </div>
         </div>
         
         {/* <LineChart data={undefined} /> */}

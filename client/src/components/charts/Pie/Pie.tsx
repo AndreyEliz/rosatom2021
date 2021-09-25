@@ -1,6 +1,7 @@
 import { ResponsivePie } from '@nivo/pie';
 import { makeStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
+import { InputLabel } from '@material-ui/core';
 
 const useStyles = makeStyles((theme:Theme) => ({
     barWrapper: {
@@ -14,6 +15,7 @@ export const Pie: React.FC<any>  = ({ data=[] }) => {
 
     return (
         <div className={classes.barWrapper}>
+            <InputLabel>Уволенные за последние 12 месяцев</InputLabel>
         <ResponsivePie
         data={data}
         margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
