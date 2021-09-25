@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { post, get } from 'sfapi';
 import { BarChart } from '../../components/charts/bar/Bar';
 import { LineChart } from '../../components/charts/line/Line';
+import { Pie } from '../../components/charts/Pie/Pie';
 import { Brief } from './brief/Brief';
 import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
@@ -23,7 +24,10 @@ const HomePage: React.FC = () => {
     const [fired, setFired] = React.useState<Person[]>([])
     const [date, setDate] = React.useState()
     const [education, setEducation] = React.useState()
+    const [oldYoung, setOldYoung] = React.useState<Person[]>([])
     const [hasMentor, setHasMentor] = React.useState<undefined | string>("")
+    const [maritalStatuses, setMaritalStatuses] = React.useState<undefined | string>("")
+    const [sex, setSex] = React.useState<undefined | string>("")
 
     const classes = useStyles()
     
@@ -50,12 +54,18 @@ const HomePage: React.FC = () => {
             HasMentor: hasMentor ? `${hasMentor === 'yes'}`: undefined,
             Month: date,
             Position: education,
+            MaritalStatus: maritalStatuses ? maritalStatuses : undefined,
+            Sex: sex ? sex : undefined
         }).then((data: any) => {
             setFired(data.Res)
         })
-    }, [date, hasMentor, education]);
+        get(`${API_URL}/RosAtom/GetByFilterArr`, {
+            IsWorking: "false"
+        }).then((data: any) => {
+            setOldYoung(data.Res)
+        })
+    }, [date, hasMentor, education, maritalStatuses, sex]);
     
-    // const current = fired.length / data.length;
 
     const handleMonthChange = (e:any) => {
         setDate(e.target.value);
@@ -65,6 +75,14 @@ const HomePage: React.FC = () => {
     }
     const handleMentorChange = (e:any) => {
         setHasMentor(e.target.value);
+    }
+
+    const handleMaritalStatusesChange = (e: any) => {
+        setMaritalStatuses(e.target.value);
+    }
+
+    const handlerSexChange = (e: any) => {
+        setSex(e.target.value);
     }
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
@@ -86,6 +104,22 @@ const HomePage: React.FC = () => {
     
     const firedArray:any[] = Object.values(fired);
     const firedFlatten = [].concat(...firedArray)
+
+    const youngCount = oldYoung.filter(x=> x.IsYoung).length;
+    const oldYoungData = [
+        {
+          "id": "Old",
+          "label": "Опытные",
+          "value": oldYoung.length - youngCount,
+          "color": "hsl(10, 70%, 50%)"
+        },
+        {
+          "id": "Young",
+          "label": "Молодые",
+          "value": youngCount,
+          "color": "hsl(267, 70%, 50%)"
+        }
+      ];
 
     return (
     <div className={classes.wrapper}>
@@ -136,6 +170,35 @@ const HomePage: React.FC = () => {
                 <MenuItem value={"no"}>Нет</MenuItem>
             </Select>
         </FormControl>
+
+        <FormControl>
+            <InputLabel>Семейное положение</InputLabel>
+            <Select
+                value={maritalStatuses}
+                label="Семейное положение"
+                onChange={handleMaritalStatusesChange}
+            >
+                <MenuItem value={undefined}>Любое</MenuItem>
+                <MenuItem value={"1"}>Разв.</MenuItem>
+                <MenuItem value={"2"}>Жен/ЗМ</MenuItem>
+                <MenuItem value={"3"}>Вдов.</MenuItem>
+                <MenuItem value={"4"}>Хол/НЗ</MenuItem>
+                <MenuItem value={"5"}>ГрБрак</MenuItem>
+            </Select>
+        </FormControl>
+        <FormControl>
+            <InputLabel>Пол</InputLabel>
+            <Select
+                value={sex}
+                label="Пол"
+                onChange={handlerSexChange}
+            >
+                <MenuItem value={undefined}>Любой</MenuItem>
+                <MenuItem value={"женский"}>женский</MenuItem>
+                <MenuItem value={"мужской"}>мужской</MenuItem>
+            </Select>
+        </FormControl>
+        <Pie data={oldYoungData}/>
         {/* <Brief data={current}/> */}
         <BarChart data={dataByMonth}/>
         {/* <LineChart data={undefined} /> */}

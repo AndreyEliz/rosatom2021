@@ -12,6 +12,7 @@ export type Person = {
     City: string;
     CountOfChildren: number;
     HasMentor: boolean;
+    IsYoung: boolean;
 }
 
 type MaritalStatus = {
