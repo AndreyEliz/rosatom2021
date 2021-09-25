@@ -43,6 +43,7 @@ const HomePage: React.FC = () => {
     const [rateFrom, setRateFrom] = React.useState<undefined | string >("")
     const [isYoung, setYoung] = React.useState<undefined | string >("")
     const [countOfChildren, setCountOfChildren] = React.useState<undefined | string >("")
+    const [rateChanged, setrateChanged]= React.useState<undefined | string >("")
 
     const classes = useStyles()
     
@@ -55,7 +56,8 @@ const HomePage: React.FC = () => {
             MaritalStatus: maritalStatuses ? maritalStatuses : undefined,
             Sex: sex ? sex : undefined,
             RateFrom: rateFrom ? rateFrom : undefined,
-            countOfChildrenChange: countOfChildren ? countOfChildren : undefined
+            IsCountOfChildrenChange: countOfChildren ? countOfChildren : undefined,
+            IsRateChange: rateChanged ? rateChanged : undefined
         }).then((data: any) => {
             setFired(data.Res)
             console.log(data)
@@ -66,44 +68,88 @@ const HomePage: React.FC = () => {
             setOldYoung(data.Res)
             console.log(data)
         })
-    }, [date, hasMentor, education, maritalStatuses, sex, rateFrom, isYoung, countOfChildren]);
+    }, [date, hasMentor, education, maritalStatuses, sex, rateFrom, isYoung, countOfChildren, rateChanged]);
     
 
     const handleMonthChange = (e:any) => {
         setDate(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
     const handleEducationChange = (e:any) => {
         setEducation(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
     const handleMentorChange = (e:any) => {
         setHasMentor(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handleMaritalStatusesChange = (e: any) => {
         setMaritalStatuses(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handleYoungChange = (e: any) => {
         setYoung(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handlerSexChange = (e: any) => {
         setSex(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handlerRateChange = (e: any) => {
         setRateFrom(e.target.value);
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handlerYoungMentorClick = () => {
         setHasMentor("yes");
         setYoung("true");
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
 
     const handlerYoungWithOutMentorClick = () => {
         setHasMentor("no");
         setYoung("true");
+        setCountOfChildren("false");
+        setrateChanged("false");
     }
+
+    const handlerCountOfChildrenClick = () => {
+        setHasMentor(undefined);
+        setEducation(undefined);
+        setMaritalStatuses(undefined); 
+        setSex(undefined); 
+        setRateFrom(undefined); 
+        setYoung(undefined);
+        setRateFrom(undefined);
+        setrateChanged("false");
+        setCountOfChildren("true");
+    }
+
+    const handlerRateChangedClick = () => {
+        setHasMentor(undefined);
+        setEducation(undefined);
+        setMaritalStatuses(undefined); 
+        setSex(undefined); 
+        setRateFrom(undefined); 
+        setYoung(undefined);
+        setRateFrom(undefined);
+        setCountOfChildren(undefined);
+        setrateChanged("true");
+    }
+
+
 
     const dataByMonth = Object.values(fired).map((month:any, index) => {
         const positions:any = {
@@ -253,14 +299,14 @@ const HomePage: React.FC = () => {
         <div className={classes.charts}>
             <div style={{width: "50%"}}>{oldYoungData.length && <Pie data={oldYoungData}/>}</div>
             {/* <Brief data={current}/> */}
-            {dataByMonth.length && <BarChart data={dataByMonth}/>}
+            {dataByMonth.length && <BarChart data={dataByMonth}/>}            
         </div>
         <div className={classes.buttons}>
             <ButtonGroup orientation="horizontal">
                 {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
                 {dataByMonth.length  && <Button onClick={handlerYoungWithOutMentorClick}>Молодые без наставника</Button>}
-                {dataByMonth.length && <Button>Изменилось количество детей</Button>}
-                {dataByMonth.length && <Button>Изменилась зарплата</Button>}
+                {dataByMonth.length && <Button onClick={handlerCountOfChildrenClick}>Изменилось количество детей</Button>}
+                {dataByMonth.length && <Button onClick={handlerRateChangedClick}>Изменилась зарплата</Button>}
             </ButtonGroup>
         </div>
         
