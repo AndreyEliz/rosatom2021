@@ -6,13 +6,14 @@ import { Pie } from '../../components/charts/Pie/Pie';
 import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
 import FormControl from '@material-ui/core/FormControl';
-import { InputLabel, Select, MenuItem, Theme, Button } from '@material-ui/core';
+import { InputLabel, Select, MenuItem, Theme, Button, ButtonGroup } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme:Theme) => ({
     wrapper: {
         display: "flex",
         flexDirection: "row",
+        flexWrap: "wrap",
     },
     form: {
         display: "flex",
@@ -23,7 +24,10 @@ const useStyles = makeStyles((theme:Theme) => ({
         display: "flex",
         flexDirection: "row",
         width: "70%"
-    }
+    }, buttons: {
+        margin: "auto",
+        marginTop: "1rem",
+    },
 }));
 
 
@@ -250,12 +254,14 @@ const HomePage: React.FC = () => {
             <div style={{width: "50%"}}>{oldYoungData.length && <Pie data={oldYoungData}/>}</div>
             {/* <Brief data={current}/> */}
             {dataByMonth.length && <BarChart data={dataByMonth}/>}
-            <div>
-            {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
+        </div>
+        <div className={classes.buttons}>
+            <ButtonGroup orientation="horizontal">
+                {dataByMonth.length  && <Button onClick={handlerYoungMentorClick}>Молодые с наставником</Button>}
                 {dataByMonth.length  && <Button onClick={handlerYoungWithOutMentorClick}>Молодые без наставника</Button>}
                 {dataByMonth.length && <Button>Изменилось количество детей</Button>}
                 {dataByMonth.length && <Button>Изменилась зарплата</Button>}
-            </div>
+            </ButtonGroup>
         </div>
         
         {/* <LineChart data={undefined} /> */}

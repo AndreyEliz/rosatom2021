@@ -33,6 +33,8 @@ export const setAuthData = (data:any) => {
 };
 
 
+
+//need to update my sfapi package after this hack
 /**
  * @param error 
  * @param customErrorHandlers 
