@@ -1,7 +1,9 @@
 import { ResponsiveSankey } from '@nivo/sankey'
 import { makeStyles } from '@material-ui/core/styles';
 import { Theme } from '@material-ui/core';
-import classes from '*.module.css';
+import { ModalDialog } from '../../Modal/Modal';
+import React from 'react';
+import AlertDialog from '../../AlertDialog/AlertDialog';
 
 const useStyles = makeStyles((theme:Theme) => ({
     wrapper: {
@@ -13,96 +15,144 @@ const useStyles = makeStyles((theme:Theme) => ({
 const testdata = {
     "nodes": [
       {
-        "id": "John",
+        "id": "total",
         "color": "hsl(357, 70%, 50%)",
-        value: 0.003
+        label: "Все сотрудники"
       },
       {
-        "id": "Raoul",
-        "color": "hsl(91, 70%, 50%)"
-      },
-      {
-        "id": "Jane",
-        "color": "hsl(58, 70%, 50%)"
-      },
-      {
-        "id": "Marcel",
-        "color": "hsl(44, 70%, 50%)"
-      },
-      {
-        "id": "Ibrahim",
-        "color": "hsl(215, 70%, 50%)"
-      },
-      {
-        "id": "Junko",
-        "color": "hsl(29, 70%, 50%)"
+        "id": "fired",
+        "color": "hsl(91, 70%, 50%)",
+        label: "Ушедшие из компании"
       }
     ],
     "links": [
       {
-        "source": "Jane",
-        "target": "Raoul",
+        "source": "total",
+        "target": "fired",
         "value": 28
       },
-      {
-        "source": "Jane",
-        "target": "Junko",
-        "value": 142
-      },
-      {
-        "source": "Marcel",
-        "target": "Ibrahim",
-        "value": 162
-      },
-      {
-        "source": "Marcel",
-        "target": "Junko",
-        "value": 136
-      },
-      {
-        "source": "Marcel",
-        "target": "Raoul",
-        "value": 159
-      },
-      {
-        "source": "Marcel",
-        "target": "Jane",
-        "value": 24
-      },
-      {
-        "source": "Junko",
-        "target": "Raoul",
-        "value": 97
-      },
-      {
-        "source": "Junko",
-        "target": "John",
-        "value": 195
-      },
-      {
-        "source": "Ibrahim",
-        "target": "Jane",
-        "value": 142
-      },
-      {
-        "source": "Raoul",
-        "target": "John",
-        "value": 69
-      }
     ]
   }
 
-export const SankeyChart = ({ data = testdata}) => {
+export const SankeyChart: React.FC<any> = ({ fired=[], total={}}) => {
     const classes = useStyles();
+    const [isModalOpen, setModalOpen] = React.useState(false)
+    const [alertOpen, setAlertOpen] = React.useState(false)
+    const [nodeId, setNodeId] = React.useState("fired")
+    const [filters, setFilters] = React.useState<any>({})
+
+    const filteredGroups = [{
+        id: "fired",
+        data: fired
+    }]
+
+    const [data, setData]= React.useState<any>({
+        nodes: [
+            {
+              "id": "total",
+              label: "Все сотрудники"
+            },
+            {
+              "id": "fired",
+              label: "Ушедшие из компании"
+            }
+          ],
+        links: [
+            {
+                "source": "total",
+                "target": "fired",
+                "value": fired.length ?? 1
+            },
+        ]
+    });
+
+    const onSankeyClick = (data:any, event: any) => {
+        if (data.id) onNodeClick(data)
+        else onLinkClick(data)
+        console.log(data, event)
+    }
+
+    const commonClick = (data:any ) => {
+        setNodeId(data.id)
+        setModalOpen(true);
+        console.log(nodeId, filters)
+    }
+
+    const onNodeClick = (data: any) => {
+        commonClick(data);
+    }
+
+    const onLinkClick = (data: any) => {
+        // commonClick(data);
+    }
+
+    const onModalClose = () => {
+        setModalOpen(false)
+    }
+
+    const handleSubmit = (data: any) => {
+        console.log(data)
+        setFilters({
+            ...filters,
+            [nodeId]: data
+        })
+        setModalOpen(false);
+        createNewNode(data)
+    }
+
+    const handleFormChange = (e: any) => {
+        setFilters({
+            ...filters,
+            [nodeId]: {
+                ...filters[nodeId],
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    function createNewNode(filters:any) {
+        const filtered = filteredGroups.find((group) => group.id === nodeId)?.data.filter((data: any) => {
+            return !Object.keys(filters).find((key) => {
+                if (filters[key] === "") return false;
+                return data[key].toString() !== filters[key]
+            })
+        })
+        console.log("data", data)
+
+        if (!filtered) {
+            setAlertOpen(true);
+            return;
+        }
+
+        const id = Object.keys(filters).map((key) => `${key} - ${filters[key]}`).join(" ");
+        filteredGroups.push({id: id, data: filtered, });
+        const node = {
+            id: id,
+            label: id
+        }
+        const link = {
+            source: nodeId,
+            target: id,
+            value: filtered.length,
+        }
+        setData({
+            nodes: [...data.nodes, node],
+            links: [...data.links, link],
+        });
+        console.log(node, link, data)
+        console.log("fired",fired)
+    }
+
     return (
         <div className={classes.wrapper}>
     <ResponsiveSankey
         data={data}
+        label={node => `${node.label}`}
         margin={{ top: 40, right: 160, bottom: 40, left: 50 }}
         align="justify"
         colors={{ scheme: 'category10' }}
         nodeOpacity={1}
-        nodeThickness={18}
+        nodeThickness={128}
         nodeInnerPadding={3}
         nodeSpacing={24}
         nodeBorderWidth={0}
@@ -115,26 +165,19 @@ export const SankeyChart = ({ data = testdata}) => {
         labelPadding={16}
         labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1 ] ] }}
         legends={[
-            // {
-            //     anchor: 'bottom-right',
-            //     direction: 'column',
-            //     translateX: 130,
-            //     itemWidth: 100,
-            //     itemHeight: 14,
-            //     itemDirection: 'right-to-left',
-            //     itemsSpacing: 2,
-            //     itemTextColor: '#999',
-            //     symbolSize: 14,
-            //     effects: [
-            //         {
-            //             on: 'hover',
-            //             style: {
-            //                 itemTextColor: '#000'
-            //             }
-            //         }
-            //     ]
-            // }
         ]}
+        onClick={onSankeyClick}
     />
+    <ModalDialog 
+        filter={filters[nodeId]}
+        open={isModalOpen}
+        handleClose={onModalClose}
+        title={"Выберите дополнительные критерии"}
+        handleSubmit={handleSubmit}
+        handleChange={handleFormChange}
+    />
+    <AlertDialog open={alertOpen} handleClose={() => setAlertOpen(false)} title={"По заданным параметрам сотруднеков не найдено"}>
+        Попробуйти изменить критерии фильтрации
+    </AlertDialog>
     </div>
 )}

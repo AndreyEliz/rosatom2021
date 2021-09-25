@@ -8,7 +8,6 @@ import type { Person } from '../../store/models/types';
 import { SankeyChart } from '../../components/charts/sankey/SankeyChart';
 import FormControl from '@material-ui/core/FormControl';
 import { InputLabel, Select, MenuItem, Theme } from '@material-ui/core';
-import classes from '*.module.css';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme:Theme) => ({
@@ -75,13 +74,8 @@ const HomePage: React.FC = () => {
             3: 0,
         }
         month.forEach((person:Person) => {
-            // if (positions[person.Position]) {
-                positions[person.Position]++
-            // }
+            positions[person.Position]++
         })
-        // if (!positions.Position1) delete positions.Position1;
-        // if (!positions.Position2) delete positions.Position2;
-        // if (!positions.Position3) delete positions.Position3;
         return {
             Position1: positions[1],
             Position2: positions[2],
@@ -89,7 +83,9 @@ const HomePage: React.FC = () => {
             Month: index.toString()
         }
     });
-    console.log(dataByMonth)
+    
+    const firedArray:any[] = Object.values(fired);
+    const firedFlatten = [].concat(...firedArray)
 
     return (
     <div className={classes.wrapper}>
@@ -142,8 +138,8 @@ const HomePage: React.FC = () => {
         </FormControl>
         {/* <Brief data={current}/> */}
         <BarChart data={dataByMonth}/>
-        <LineChart data={undefined} />
-        <SankeyChart data={undefined} />
+        {/* <LineChart data={undefined} /> */}
+        <SankeyChart total={data.length} fired={firedFlatten} />
     </div>   
     );
 }

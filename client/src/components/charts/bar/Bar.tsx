@@ -12,20 +12,9 @@ const useStyles = makeStyles((theme:Theme) => ({
 export const BarChart: React.FC<any> = ({ 
     data = [],
     keys = [
-        // "Position",
         "Position1",
         "Position2",
         "Position3",
-        // "DateOfBirth",
-        // "Sex",
-        // "MaritalStatus",
-        // "StartDate",
-        // "EndDate",
-        // "NameOfAbsence",
-        // "CalendarDaysOfAbsence",
-        // "Rate",
-        // "CountOfChildren",
-        // "HasMentor",
     ],
     indexBy ="Month",
     legends = []
