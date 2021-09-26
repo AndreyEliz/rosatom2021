@@ -5,7 +5,7 @@ import {
 } from 'actions/action-types';
 
 const initialState = {
-    authorized: true,
+    authorized: false,
     userName: ''
 };
 

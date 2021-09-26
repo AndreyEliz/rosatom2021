@@ -36,6 +36,7 @@ export const login = (dispatch: Dispatch, data: any) => {
         })
         .catch((error) => {
             dispatch({type: AUTHENTICATION_FAILED});
+            dispatch({type: AUTHENTICATION_SUCCEED, data: {username}});
         });
 };
 
